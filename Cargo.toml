@@ -2,6 +2,9 @@
 name = "simple-file-download-server"
 version = "0.1.0"
 edition = "2021"
+description = "minimap2 frontend"
+license = "MIT"
+repository ="https://github.com/keithyin/file-server"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
