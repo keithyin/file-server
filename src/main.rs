@@ -52,7 +52,7 @@ async fn root_processor() -> impl IntoResponse {
     let mut lines = vec![];
     for entry in entries {
         let entry = entry.unwrap();
-        entry.metadata().unwrap().modified().unwrap()
+        // entry.metadata().unwrap().modified().unwrap()
         let filename = entry.file_name().to_str().unwrap().to_string();
         let prefix = if entry.file_type().unwrap().is_dir() {
             "DIR :"
