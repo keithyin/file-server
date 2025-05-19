@@ -41,6 +41,10 @@ async fn main() {
 }
 
 
+// pub struct PathAndMeta {
+//     path: String,
+// }
+
 async fn root_processor() -> impl IntoResponse {
 
     let root_dir = std::env::current_dir().unwrap();
@@ -48,11 +52,17 @@ async fn root_processor() -> impl IntoResponse {
     let mut lines = vec![];
     for entry in entries {
         let entry = entry.unwrap();
+        entry.metadata().unwrap().modified().unwrap()
         let filename = entry.file_name().to_str().unwrap().to_string();
-        lines.push(format!("<a href=/{}> {} </a>", &filename, &filename));
+        let prefix = if entry.file_type().unwrap().is_dir() {
+            "DIR :"
+        } else {
+            "FILE:"
+        };
+        lines.push(format!("{} <a href=/{}> {} </a>", prefix, &filename, &filename));
         // lines.push(entry.path().to_str().unwrap().to_string());
     }
-
+    lines.sort();
     Html(lines.join("<br/>"))
 
 }
@@ -84,9 +94,14 @@ async fn processor(Path(pt): Path<String>) -> impl IntoResponse {
         for entry in entries {
             let entry = entry.unwrap();
             let filename = entry.file_name().to_str().unwrap().to_string();
-            
-            lines.push(format!("<a href=/{}/{}> {} </a>", &pt, &filename, &filename));
+            let prefix = if entry.file_type().unwrap().is_dir() {
+                "DIR :"
+            } else {
+                "FILE:"
+            };
+            lines.push(format!("{} <a href=/{}/{}> {} </a>", prefix, &pt, &filename, &filename));
         }
+        lines.sort();
         let res_content = lines.join("<br/>");
 
         return (
